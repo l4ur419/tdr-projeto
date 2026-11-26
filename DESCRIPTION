@@ -32,3 +32,5 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: quarto
 Config/testthat/edition: 3
+URL: https://l4ur419.github.io/tdr-projeto/, https://github.com/l4ur419/tdr-projeto
+BugReports: https://github.com/l4ur419/tdr-projeto/issues

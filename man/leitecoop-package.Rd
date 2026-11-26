@@ -25,6 +25,15 @@ meses com e sem registro usam \code{is.na()}. A decisão afeta os totais e as
 médias da medida relativa, mas não as contagens de meses.
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://l4ur419.github.io/tdr-projeto/}
+  \item \url{https://github.com/l4ur419/tdr-projeto}
+  \item Report bugs at \url{https://github.com/l4ur419/tdr-projeto/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Laura Nicoletti \email{laura.nicoletti@ufpr.br}
 

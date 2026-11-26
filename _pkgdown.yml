@@ -1,0 +1,40 @@
+
+url: https://l4ur419.github.io/tdr-projeto/
+template:
+  bootstrap: 5
+lang: pt
+
+reference:
+  - title: Arquivos e leitura
+    desc: Os arquivos brutos que acompanham o pacote e as funções que os leem.
+    contents:
+      - caminho_dados
+      - ler_cadastro
+      - ler_um_ano
+      - ler_anuais
+      - ler_login
+  - title: Arrumação
+    desc: Da leitura à tabela arrumada, da classe `leitecoop`.
+    contents:
+      - arrumar_dados
+      - achar_sem_medicao
+      - leitecoop-metodos
+  - title: Resumos
+    desc: Resumos por fazenda, sistema, ano e mês.
+    contents:
+      - starts_with("resumir_")
+  - title: Gráficos
+    contents:
+      - grafico_sazonal
+      - grafico_categorias
+  - title: Modelo
+    desc: Variação anual estimada por um modelo log-linear (opcional).
+    contents:
+      - ajustar_modelo
+      - variacao_anual
+  - title: Utilitários
+    contents:
+      - formatar_numero
+  - title: Dados
+    contents:
+      - leite_fazendas
