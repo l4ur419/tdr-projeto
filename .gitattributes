@@ -1,0 +1,3 @@
+# Os arquivos de dados ficam byte a byte iguais aos do zip da Lista 03:
+# o Git nao converte fim de linha nem codificacao deles.
+inst/extdata/** -text
