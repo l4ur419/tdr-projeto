@@ -1,0 +1,90 @@
+Lê, arruma e resume dados simulados do leite entregue a cada mês, de
+2023 a 2025, pelas fazendas de uma cooperativa. O pacote traz os
+arquivos brutos, as funções de leitura e de arrumação, uma classe para a
+tabela arrumada com métodos de impressão, resumo e gráfico, os resumos
+por fazenda, por sistema de produção, por ano e por mês, e a tabela
+arrumada como conjunto de dados.
+
+# Índice de pacotes
+
+## Arquivos e leitura
+
+Os arquivos brutos que acompanham o pacote e as funções que os leem.
+
+- [`caminho_dados()`](https://l4ur419.github.io/tdr-projeto/reference/caminho_dados.md)
+  : Caminho de um arquivo de dados do pacote
+- [`ler_cadastro()`](https://l4ur419.github.io/tdr-projeto/reference/ler_cadastro.md)
+  : Leitura do cadastro das fazendas
+- [`ler_um_ano()`](https://l4ur419.github.io/tdr-projeto/reference/ler_um_ano.md)
+  : Leitura de um arquivo anual de medições
+- [`ler_anuais()`](https://l4ur419.github.io/tdr-projeto/reference/ler_anuais.md)
+  : Leitura dos três arquivos anuais
+- [`ler_login()`](https://l4ur419.github.io/tdr-projeto/reference/ler_login.md)
+  : Login para o qual os dados foram sorteados
+
+## Arrumação
+
+Da leitura à tabela arrumada, da classe `leitecoop`.
+
+- [`arrumar_dados()`](https://l4ur419.github.io/tdr-projeto/reference/arrumar_dados.md)
+  : Arrumação das medições e junção ao cadastro
+
+- [`achar_sem_medicao()`](https://l4ur419.github.io/tdr-projeto/reference/achar_sem_medicao.md)
+  : Fazenda do cadastro sem medição
+
+- [`print(`*`<leitecoop>`*`)`](https://l4ur419.github.io/tdr-projeto/reference/leitecoop-metodos.md)
+  [`summary(`*`<leitecoop>`*`)`](https://l4ur419.github.io/tdr-projeto/reference/leitecoop-metodos.md)
+  [`plot(`*`<leitecoop>`*`)`](https://l4ur419.github.io/tdr-projeto/reference/leitecoop-metodos.md)
+  :
+
+  Métodos da classe `leitecoop`
+
+## Resumos
+
+Resumos por fazenda, sistema, ano e mês.
+
+- [`resumir_ano()`](https://l4ur419.github.io/tdr-projeto/reference/resumir_ano.md)
+  : Resumo por ano
+- [`resumir_cat_ano()`](https://l4ur419.github.io/tdr-projeto/reference/resumir_cat_ano.md)
+  : Total de cada sistema em cada ano
+- [`resumir_categoria()`](https://l4ur419.github.io/tdr-projeto/reference/resumir_categoria.md)
+  : Resumo por sistema de produção
+- [`resumir_mes()`](https://l4ur419.github.io/tdr-projeto/reference/resumir_mes.md)
+  : Resumo por mês
+- [`resumir_sazonal()`](https://l4ur419.github.io/tdr-projeto/reference/resumir_sazonal.md)
+  : Resumo por ano e mês
+- [`resumir_unidade()`](https://l4ur419.github.io/tdr-projeto/reference/resumir_unidade.md)
+  : Resumo por fazenda
+
+## Gráficos
+
+- [`grafico_sazonal()`](https://l4ur419.github.io/tdr-projeto/reference/grafico_sazonal.md)
+  : Gráfico de sazonalidade
+- [`grafico_categorias()`](https://l4ur419.github.io/tdr-projeto/reference/grafico_categorias.md)
+  : Gráfico da medida relativa por sistema
+
+## Modelo
+
+Variação anual estimada por um modelo log-linear (opcional).
+
+- [`ajustar_modelo()`](https://l4ur419.github.io/tdr-projeto/reference/ajustar_modelo.md)
+  : Modelo para a variação anual
+- [`variacao_anual()`](https://l4ur419.github.io/tdr-projeto/reference/variacao_anual.md)
+  : Variação anual estimada
+
+## Utilitários
+
+- [`formatar_numero()`](https://l4ur419.github.io/tdr-projeto/reference/formatar_numero.md)
+  : Número no formato brasileiro
+
+## Dados
+
+- [`leite_fazendas`](https://l4ur419.github.io/tdr-projeto/reference/leite_fazendas.md)
+  : Leite entregue pelas fazendas de uma cooperativa
+
+# Artigos
+
+### Todas as vinhetas
+
+- [Leite entregue pelas fazendas de uma
+  cooperativa](https://l4ur419.github.io/tdr-projeto/articles/leitecoop.md):
