@@ -26,3 +26,7 @@ Imports:
     tibble,
     tidyr
 LazyData: true
+Suggests: 
+    knitr,
+    quarto
+VignetteBuilder: quarto

@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .quarto
+inst/doc
+**/.quarto/

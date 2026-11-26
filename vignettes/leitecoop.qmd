@@ -1,0 +1,209 @@
+---
+title: "Leite entregue pelas fazendas de uma cooperativa"
+lang: pt-BR
+vignette: >
+  %\VignetteIndexEntry{Leite entregue pelas fazendas de uma cooperativa}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(leitecoop)
+```
+
+Esta vinheta refaz a análise do trabalho intermediário só com as funções
+e os dados do pacote. As tabelas usam a função auxiliar abaixo, que
+formata os números reais com duas casas decimais e vírgula decimal, por
+meio da `formatar_numero()` do pacote.
+
+```{r}
+#| label: auxiliares
+tabela <- function(x, ...) {
+  alinhamento <- ifelse(vapply(x, is.numeric, logical(1)), "r", "l")
+  x[] <- lapply(x, function(coluna) {
+    if (is.double(coluna)) formatar_numero(coluna, 2) else coluna
+  })
+  knitr::kable(x, align = alinhamento, ...)
+}
+
+# Nome por extenso de cada mês, para o texto
+nome_mes <- c(
+  jan = "janeiro", fev = "fevereiro", mar = "março", abr = "abril",
+  mai = "maio", jun = "junho", jul = "julho", ago = "agosto",
+  set = "setembro", out = "outubro", nov = "novembro", dez = "dezembro"
+)
+```
+
+## Os dados
+
+```{r}
+#| label: dados
+login <- ler_login()
+cadastro <- ler_cadastro()
+sem_medicao <- achar_sem_medicao(cadastro, ler_anuais())
+conferencia <- summary(leite_fazendas)
+```
+
+Os dados são simulados, sorteados para o login `` `r login` `` do GitHub,
+e tratam do leite entregue pelas fazendas de uma cooperativa em 2023, 2024
+e 2025. Os cinco arquivos brutos acompanham o pacote e são encontrados
+pela `caminho_dados()`. O cadastro, lido pela `ler_cadastro()`, tem
+`r nrow(cadastro)` fazendas, das quais uma não tem medição em ano algum:
+`r sem_medicao$nome` (código `r sem_medicao$codigo`), encontrada pela
+`achar_sem_medicao()`.
+
+A tabela arrumada, com uma linha por fazenda, ano e mês, vem pronta no
+conjunto `leite_fazendas`, montado pela `arrumar_dados()`. Ela é da classe
+`leitecoop`, cujo `print()` escreve uma linha de resumo antes da tabela:
+
+```{r}
+#| label: tabela-arrumada
+leite_fazendas
+```
+
+A medida relativa usada nas comparações, `litros_por_vaca`, é o leite do
+mês dividido pelo número de vacas da fazenda. Como o leite está registrado
+em milhares de litros, a medida relativa está em mil litros por vaca.
+
+O `summary()` da tabela arrumada é a conferência da leitura contra o
+`LEIA-ME.txt` (@tbl-conferencia): em cada ano, o número de fazendas com
+medição, as linhas da tabela (uma por fazenda e mês), os meses sem
+registro e a soma dos valores registrados.
+
+```{r}
+#| label: tbl-conferencia
+#| tbl-cap: >-
+#|   Conferência da leitura, por ano: fazendas com medição, linhas da
+#|   tabela arrumada, meses sem registro e soma do leite registrado, em
+#|   mil litros.
+tabela(
+  conferencia,
+  col.names = c("Ano", "Fazendas", "Linhas", "Meses sem registro",
+                "Soma (mil litros)")
+)
+```
+
+**Meses sem registro.** Um mês sem registro foi tratado como dado
+ausente, e não como produção zero: a falta de registro não indica que a
+fazenda deixou de produzir. Por isso, ele continua `NA` na tabela
+arrumada, e as somas e médias dos resumos ignoram esses meses. A decisão
+afeta as colunas de total e de média da medida relativa, mas não afeta a
+contagem de meses com registro, que apenas verifica se o mês foi
+preenchido. Nos três anos há `r sum(conferencia$meses_sem_registro)`
+meses sem registro, e o total registrado é de
+`r formatar_numero(sum(conferencia$soma))` mil litros.
+
+## Sazonalidade
+
+O `plot()` da tabela arrumada desenha a média mensal de mil litros por
+vaca em cada ano (@fig-sazonal).
+
+```{r}
+#| label: fig-sazonal
+#| fig-cap: >-
+#|   Média mensal de mil litros por vaca, com uma linha para cada ano.
+plot(leite_fazendas)
+```
+
+```{r}
+#| label: meses
+por_mes <- resumir_mes(leite_fazendas)
+maior_mes <- por_mes[which.max(por_mes$media_relativa), ]
+menor_mes <- por_mes[which.min(por_mes$media_relativa), ]
+```
+
+Com os três anos juntos, pela `resumir_mes()`, o mês de maior média é
+`r nome_mes[[as.character(maior_mes$mes)]]`, com
+`r formatar_numero(maior_mes$media_relativa, 2)` mil litros por vaca, e o
+de menor média é `r nome_mes[[as.character(menor_mes$mes)]]`, com
+`r formatar_numero(menor_mes$media_relativa, 2)` mil litros por vaca.
+
+## Variação entre 2023 e 2025
+
+```{r}
+#| label: variacao
+resumo_anual <- resumir_ano(leite_fazendas)
+primeiro <- resumo_anual[1, ]
+ultimo <- resumo_anual[nrow(resumo_anual), ]
+variacao <- 100 * (ultimo$media_relativa / primeiro$media_relativa - 1)
+```
+
+A @tbl-anual resume cada ano, pela `resumir_ano()`. A média mensal de mil
+litros por vaca passou de `r formatar_numero(primeiro$media_relativa, 2)`
+em `r primeiro$ano` para `r formatar_numero(ultimo$media_relativa, 2)` em
+`r ultimo$ano`, uma variação de `r formatar_numero(variacao, 1)`%.
+
+A comparação usa a média da medida relativa, e não o total, porque o
+total soma apenas os meses registrados: um ano com mais meses sem registro
+teria total menor sem que a produção tivesse caído. O total também
+depende do tamanho dos rebanhos. A média da medida relativa considera só
+os meses registrados e desconta o porte de cada fazenda.
+
+```{r}
+#| label: tbl-anual
+#| tbl-cap: >-
+#|   Resumo por ano: fazendas com medição, meses com e sem registro, total
+#|   de leite, em mil litros, e média mensal da medida relativa, em mil
+#|   litros por vaca.
+tabela(
+  resumo_anual,
+  col.names = c("Ano", "Fazendas", "Meses com registro",
+                "Meses sem registro", "Total (mil litros)",
+                "Mil litros por vaca")
+)
+```
+
+```{r}
+#| label: modelo
+efeito_ano <- variacao_anual(ajustar_modelo(leite_fazendas))
+```
+
+O modelo `log(litros_por_vaca) ~ ano + mes + sistema`, ajustado pela
+`ajustar_modelo()`, desconta o mês e o sistema de cada medição. Pela
+`variacao_anual()`, a variação anual estimada é de
+`r formatar_numero(100 * efeito_ano$variacao, 1)`% ao ano, com intervalo de
+confiança de 95% de `r formatar_numero(100 * efeito_ano$inferior, 1)`% a
+`r formatar_numero(100 * efeito_ano$superior, 1)`%.
+
+## Diferenças entre categorias
+
+```{r}
+#| label: sistemas
+resumo_categoria <- resumir_categoria(leite_fazendas)
+maior_sistema <- resumo_categoria[which.max(resumo_categoria$media_relativa), ]
+menor_sistema <- resumo_categoria[which.min(resumo_categoria$media_relativa), ]
+```
+
+A @fig-categorias mostra a distribuição de mil litros por vaca em cada
+sistema de produção, e a @tbl-categoria traz as médias, pela
+`resumir_categoria()`. O sistema com a maior média é
+`r maior_sistema$sistema`
+(`r formatar_numero(maior_sistema$media_relativa, 2)` mil litros por
+vaca), e o de menor média é `r menor_sistema$sistema`
+(`r formatar_numero(menor_sistema$media_relativa, 2)` mil litros por
+vaca).
+
+```{r}
+#| label: fig-categorias
+#| fig-cap: >-
+#|   Distribuição de mil litros por vaca no mês, em cada sistema, com os
+#|   três anos juntos.
+grafico_categorias(leite_fazendas)
+```
+
+```{r}
+#| label: tbl-categoria
+#| tbl-cap: >-
+#|   Resumo por sistema, nos três anos: número de fazendas, total de leite
+#|   (mil litros) e média mensal de mil litros por vaca.
+tabela(
+  resumo_categoria,
+  col.names = c("Sistema", "Fazendas", "Total (mil litros)",
+                "Mil litros por vaca")
+)
+```
