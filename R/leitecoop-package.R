@@ -1,10 +1,13 @@
 #' leitecoop: leite entregue pelas fazendas de uma cooperativa
 #'
 #' Dados simulados do leite entregue a cada mês, de 2023 a 2025, pelas
-#' fazendas de uma cooperativa.
+#' fazendas de uma cooperativa, sorteados para o login `l4ur419` do GitHub.
 #' Os cinco arquivos brutos acompanham o pacote em `inst/extdata/`
 #' ([caminho_dados()]); as funções [ler_cadastro()] e [ler_anuais()] os
-#' leem, e a [arrumar_dados()] monta a tabela arrumada.
+#' leem, a [arrumar_dados()] monta a tabela arrumada, da classe
+#' `leitecoop` ([leitecoop-metodos]), e os resumos e gráficos partem dela.
+#' A tabela arrumada também vem pronta, no conjunto de dados
+#' [leite_fazendas].
 #'
 #' @section Meses sem registro:
 #' Um mês sem registro (`"-"` nos arquivos anuais) é tratado como dado

@@ -24,7 +24,9 @@
 #' @param cadastro Tabela do cadastro, como a devolvida por
 #'   [ler_cadastro()]. O padrão é a leitura do cadastro do pacote.
 #'
-#' @returns Um `tibble` com uma linha por fazenda, ano e mês e as colunas
+#' @returns Um objeto da classe `leitecoop` (veja [leitecoop-metodos]),
+#'   que continua sendo um `tibble`, com uma linha por fazenda, ano e mês e
+#'   as colunas
 #'   `origem`, `ano`, `codigo`, `mes` (fator ordenado pelo calendário),
 #'   `leite`, `nome`, `sistema`, `vacas` e `litros_por_vaca`. Uma tabela
 #'   sem as colunas esperadas produz um erro da classe
@@ -76,7 +78,8 @@ arrumar_dados <- function(leite_bruto = ler_anuais(),
 
   longa |>
     dplyr::left_join(cadastro, by = "codigo", relationship = "many-to-one") |>
-    dplyr::mutate(litros_por_vaca = .data$leite / .data$vacas)
+    dplyr::mutate(litros_por_vaca = .data$leite / .data$vacas) |>
+    nova_tabela_leite()
 }
 
 #' Fazenda do cadastro sem medição

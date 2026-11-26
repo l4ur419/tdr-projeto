@@ -7,10 +7,13 @@
 \title{leitecoop: leite entregue pelas fazendas de uma cooperativa}
 \description{
 Dados simulados do leite entregue a cada mês, de 2023 a 2025, pelas
-fazendas de uma cooperativa.
+fazendas de uma cooperativa, sorteados para o login \code{l4ur419} do GitHub.
 Os cinco arquivos brutos acompanham o pacote em \verb{inst/extdata/}
 (\code{\link[=caminho_dados]{caminho_dados()}}); as funções \code{\link[=ler_cadastro]{ler_cadastro()}} e \code{\link[=ler_anuais]{ler_anuais()}} os
-leem, e a \code{\link[=arrumar_dados]{arrumar_dados()}} monta a tabela arrumada.
+leem, a \code{\link[=arrumar_dados]{arrumar_dados()}} monta a tabela arrumada, da classe
+\code{leitecoop} (\link{leitecoop-metodos}), e os resumos e gráficos partem dela.
+A tabela arrumada também vem pronta, no conjunto de dados
+\link{leite_fazendas}.
 }
 \section{Meses sem registro}{
 

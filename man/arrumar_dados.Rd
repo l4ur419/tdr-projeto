@@ -15,7 +15,9 @@ padrão é a leitura dos arquivos que acompanham o pacote.}
 \code{\link[=ler_cadastro]{ler_cadastro()}}. O padrão é a leitura do cadastro do pacote.}
 }
 \value{
-Um \code{tibble} com uma linha por fazenda, ano e mês e as colunas
+Um objeto da classe \code{leitecoop} (veja \link{leitecoop-metodos}),
+que continua sendo um \code{tibble}, com uma linha por fazenda, ano e mês e
+as colunas
 \code{origem}, \code{ano}, \code{codigo}, \code{mes} (fator ordenado pelo calendário),
 \code{leite}, \code{nome}, \code{sistema}, \code{vacas} e \code{litros_por_vaca}. Uma tabela
 sem as colunas esperadas produz um erro da classe

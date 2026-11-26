@@ -18,8 +18,11 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Imports: 
     dplyr (>= 1.1.0),
+    ggplot2 (>= 3.4.0),
     purrr (>= 1.0.0),
     readr,
     rlang,
+    stats,
     tibble,
     tidyr
+LazyData: true
