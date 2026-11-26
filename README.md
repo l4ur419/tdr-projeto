@@ -1,0 +1,156 @@
+
+# leitecoop
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/l4ur419/tdr-projeto/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/l4ur419/tdr-projeto/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/l4ur419/tdr-projeto/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/l4ur419/tdr-projeto/actions/workflows/pkgdown.yaml)
+<!-- badges: end -->
+
+O `leitecoop` lê, arruma e resume dados do leite entregue a cada mês, de
+2023 a 2025, pelas fazendas de uma cooperativa. O pacote traz:
+
+- os arquivos brutos, encontrados pela `caminho_dados()`;
+- as funções de leitura (`ler_cadastro()`, `ler_um_ano()`, `ler_anuais()`)
+  e de arrumação (`arrumar_dados()`), que levam dos arquivos à tabela com
+  uma linha por fazenda, ano e mês, juntada ao cadastro e com a medida
+  relativa, o leite por vaca;
+- a classe `leitecoop` da tabela arrumada, com os métodos `print()`,
+  `summary()` (a conferência por ano) e `plot()` (a sazonalidade);
+- os resumos por fazenda, sistema, ano e mês (`resumir_*()`), os gráficos
+  e um modelo para a variação anual;
+- a tabela arrumada pronta, no conjunto de dados `leite_fazendas`;
+- uma vinheta, que refaz a análise só com as funções e os dados do pacote.
+
+A documentação completa está no site do pacote:
+<https://l4ur419.github.io/tdr-projeto/>.
+
+## Os dados
+
+Os dados são **simulados**. Eles foram sorteados para o login `l4ur419`
+do GitHub e distribuídos para a Lista 03 da disciplina Tecnologia de Dados
+(UFPR), no arquivo `lista-03-l4ur419.zip`, de
+<https://fernandomayer.github.io/data/tdr/>. Os cinco arquivos do zip
+estão em `inst/extdata/`, sem alteração:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `leite_2023.csv`, `leite_2024.csv`, `leite_2025.csv` | Uma linha por fazenda e uma coluna por mês, com o leite entregue em milhares de litros; `-` marca o mês sem registro |
+| `cadastro.csv` | Uma linha por fazenda: código, nome, sistema de produção (Confinado, Semiconfinado ou Pasto) e vacas em lactação |
+| `LEIA-ME.txt` | A descrição dos arquivos e os números de conferência |
+
+Um mês sem registro é tratado como dado ausente, e não como produção
+zero: ele continua `NA` na tabela arrumada, e as somas e médias o ignoram.
+
+## Instalação
+
+O pacote é instalado do GitHub com o [pak](https://pak.r-lib.org/), na
+versão publicada:
+
+``` r
+# install.packages("pak")
+pak::pak("l4ur419/tdr-projeto@v0.1.0")
+```
+
+Sem o `@v0.1.0`, o `pak` instala o último commit do ramo `main`.
+
+## Exemplo
+
+A tabela arrumada vem pronta, e o `print()` da classe escreve uma linha de
+resumo antes dela:
+
+``` r
+library(leitecoop)
+leite_fazendas
+#> Leite de 10 fazendas em 3 anos (2023 a 2025), com 9 meses sem registro
+#> # A tibble: 360 × 9
+#>   origem           ano codigo mes   leite nome     sistema vacas litros_por_vaca
+#>   <chr>          <int> <chr>  <fct> <dbl> <chr>    <chr>   <dbl>           <dbl>
+#> 1 leite_2023.csv  2023 FZ02   jan    190. Fazenda… Pasto     371           0.512
+#> 2 leite_2023.csv  2023 FZ02   fev    182. Fazenda… Pasto     371           0.490
+#> 3 leite_2023.csv  2023 FZ02   mar    202  Fazenda… Pasto     371           0.544
+#> # ℹ 357 more rows
+```
+
+O `summary()` é a conferência por ano, com os números do `LEIA-ME.txt`, e
+os resumos partem da mesma tabela:
+
+``` r
+summary(leite_fazendas)
+#> # A tibble: 3 × 5
+#>     ano unidades linhas meses_sem_registro   soma
+#>   <int>    <int>  <int>              <int>  <dbl>
+#> 1  2023       10    120                  2 18870.
+#> 2  2024       10    120                  5 19673.
+#> 3  2025       10    120                  2 21661
+
+resumir_categoria(leite_fazendas)
+#> # A tibble: 3 × 4
+#>   sistema       unidades  total media_relativa
+#>   <chr>            <int>  <dbl>          <dbl>
+#> 1 Confinado            4 26281.          0.831
+#> 2 Semiconfinado        3 20442.          0.682
+#> 3 Pasto                3 13482.          0.558
+```
+
+A mesma tabela sai dos arquivos brutos com as funções de leitura e de
+arrumação, e o `plot()` desenha a sazonalidade:
+
+``` r
+dados <- arrumar_dados(ler_anuais(), ler_cadastro())
+plot(dados)
+```
+
+## Verificação
+
+O `devtools::check()` da versão 0.1.0 termina sem erros, sem avisos e sem
+NOTEs:
+
+```
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+```
+
+Em algumas execuções locais apareceu a NOTE
+
+```
+checking for future file timestamps ... NOTE
+  unable to verify current time
+```
+
+Ela não diz respeito ao pacote: para conferir se algum arquivo tem data
+no futuro, o `R CMD check` consulta a hora certa em um serviço na
+internet, e a NOTE aparece quando esse serviço não responde. Repetida a
+verificação com o serviço disponível, ela não aparece.
+
+No GitHub Actions, o `R CMD check` roda em cinco configurações (macOS e
+Windows com o R atual, e Ubuntu com o R em desenvolvimento, atual e
+anterior), e o selo `R-CMD-check` acima mostra o resultado do último
+envio.
+
+Os testes (`devtools::test()`) passam sem falhas: são 195 verificações,
+que cobrem todas as funções exportadas e os métodos da classe, cada erro
+de classe própria, a saída do `print()` em *snapshot* e os números do
+`LEIA-ME.txt` (unidades, meses sem registro e somas por ano), lidos do
+próprio arquivo e conferidos contra a leitura e a arrumação. A cobertura
+dos testes, medida com `covr::package_coverage()`, é de **100%**.
+
+## Declaração de uso de LLMs
+
+- **Ferramenta:** Claude (Anthropic), modelo Claude Opus 5.5, pela
+  interface de chat do Claude.
+- **Em que partes:** A partir das funções e do relatório do meu trabalho
+  intermediário, o Claude me ajudou a escrever o código das funções em `R/`, com a
+  documentação do `roxygen2` e a validação com erros de classe própria, a
+  classe `leitecoop` e os métodos, os testes, a
+  vinheta (adaptada do relatório), o `_pkgdown.yml`, as alterações dos
+  *workflows* (`local::.` e `LANG`), o `NEWS.md` e o rascunho deste
+  README. Também me orientou, etapa por etapa, nos comandos do `usethis`,
+  do `devtools` e do Git, que eu executei na minha máquina.
+- **Como o resultado foi conferido:** rodei cada etapa e conferi o
+  `devtools::check()` sem erros e sem avisos; o `devtools::test()` sem
+  falhas e a cobertura de 100% no `covr`; os números da tabela arrumada,
+  do `summary()` e dos resumos, comparados com o `LEIA-ME.txt` e com o
+  relatório do trabalho intermediário; o `inst/extdata/` comparado, pela
+  soma MD5, com o zip publicado para o meu login; o
+  `pkgdown::check_pkgdown()` e o site publicado; as duas verificações
+  aprovadas no GitHub Actions; e a leitura do código, da documentação e da
+  vinheta.

@@ -1,6 +1,6 @@
 Package: leitecoop
 Title: Leite Entregue pelas Fazendas de uma Cooperativa (Dados Simulados)
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Laura", "Nicoletti", , "laura.nicoletti@ufpr.br", role = c("aut", "cre"))
 Description: Lê, arruma e resume dados simulados do leite entregue a cada
