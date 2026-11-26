@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">leitecoop</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Alternar de navegação">
@@ -32,6 +32,7 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="articles/leitecoop.html">Primeiros passos</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Referência</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -45,8 +46,124 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Lê, arruma e resume dados simulados do leite entregue a cada mês, de 2023 a 2025, pelas fazendas de uma cooperativa. O pacote traz os arquivos brutos, as funções de leitura e de arrumação, uma classe para a tabela arrumada com métodos de impressão, resumo e gráfico, os resumos por fazenda, por sistema de produção, por ano e por mês, e a tabela arrumada como conjunto de dados.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="leitecoop">leitecoop<a class="anchor" aria-label="anchor" href="#leitecoop"></a>
+</h1></div>
+<!-- badges: start -->
+
+<p>O <code>leitecoop</code> lê, arruma e resume dados do leite entregue a cada mês, de 2023 a 2025, pelas fazendas de uma cooperativa. O pacote traz:</p>
+<ul>
+<li>os arquivos brutos, encontrados pela <code><a href="reference/caminho_dados.html">caminho_dados()</a></code>;</li>
+<li>as funções de leitura (<code><a href="reference/ler_cadastro.html">ler_cadastro()</a></code>, <code><a href="reference/ler_um_ano.html">ler_um_ano()</a></code>, <code><a href="reference/ler_anuais.html">ler_anuais()</a></code>) e de arrumação (<code><a href="reference/arrumar_dados.html">arrumar_dados()</a></code>), que levam dos arquivos à tabela com uma linha por fazenda, ano e mês, juntada ao cadastro e com a medida relativa, o leite por vaca;</li>
+<li>a classe <code>leitecoop</code> da tabela arrumada, com os métodos <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> (a conferência por ano) e <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> (a sazonalidade);</li>
+<li>os resumos por fazenda, sistema, ano e mês (<code>resumir_*()</code>), os gráficos e um modelo para a variação anual;</li>
+<li>a tabela arrumada pronta, no conjunto de dados <code>leite_fazendas</code>;</li>
+<li>uma vinheta, que refaz a análise só com as funções e os dados do pacote.</li>
+</ul>
+<p>A documentação completa está no site do pacote: <a href="https://l4ur419.github.io/tdr-projeto/" class="uri">https://l4ur419.github.io/tdr-projeto/</a>.</p>
+<div class="section level2">
+<h2 id="os-dados">Os dados<a class="anchor" aria-label="anchor" href="#os-dados"></a>
+</h2>
+<p>Os dados são <strong>simulados</strong>. Eles foram sorteados para o login <code>l4ur419</code> do GitHub e distribuídos para a Lista 03 da disciplina Tecnologia de Dados (UFPR), no arquivo <code>lista-03-l4ur419.zip</code>, de <a href="https://fernandomayer.github.io/data/tdr/" class="external-link uri">https://fernandomayer.github.io/data/tdr/</a>. Os cinco arquivos do zip estão em <code>inst/extdata/</code>, sem alteração:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Arquivo</th>
+<th>Conteúdo</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+<code>leite_2023.csv</code>, <code>leite_2024.csv</code>, <code>leite_2025.csv</code>
+</td>
+<td>Uma linha por fazenda e uma coluna por mês, com o leite entregue em milhares de litros; <code>-</code> marca o mês sem registro</td>
+</tr>
+<tr>
+<td><code>cadastro.csv</code></td>
+<td>Uma linha por fazenda: código, nome, sistema de produção (Confinado, Semiconfinado ou Pasto) e vacas em lactação</td>
+</tr>
+<tr>
+<td><code>LEIA-ME.txt</code></td>
+<td>A descrição dos arquivos e os números de conferência</td>
+</tr>
+</tbody>
+</table>
+<p>Um mês sem registro é tratado como dado ausente, e não como produção zero: ele continua <code>NA</code> na tabela arrumada, e as somas e médias o ignoram.</p>
+</div>
+<div class="section level2">
+<h2 id="instalação">Instalação<a class="anchor" aria-label="anchor" href="#instala%C3%A7%C3%A3o"></a>
+</h2>
+<p>O pacote é instalado do GitHub com o <a href="https://pak.r-lib.org/" class="external-link">pak</a>, na versão publicada:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"l4ur419/tdr-projeto@v0.1.0"</span><span class="op">)</span></span></code></pre></div>
+<p>Sem o <code>@v0.1.0</code>, o <code>pak</code> instala o último commit do ramo <code>main</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="exemplo">Exemplo<a class="anchor" aria-label="anchor" href="#exemplo"></a>
+</h2>
+<p>A tabela arrumada vem pronta, e o <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> da classe escreve uma linha de resumo antes dela:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://l4ur419.github.io/tdr-projeto/">leitecoop</a></span><span class="op">)</span></span>
+<span><span class="va">leite_fazendas</span></span>
+<span><span class="co">#&gt; Leite de 10 fazendas em 3 anos (2023 a 2025), com 9 meses sem registro</span></span>
+<span><span class="co">#&gt; # A tibble: 360 × 9</span></span>
+<span><span class="co">#&gt;   origem           ano codigo mes   leite nome     sistema vacas litros_por_vaca</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;          &lt;int&gt; &lt;chr&gt;  &lt;fct&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;dbl&gt;           &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 leite_2023.csv  2023 FZ02   jan    190. Fazenda… Pasto     371           0.512</span></span>
+<span><span class="co">#&gt; 2 leite_2023.csv  2023 FZ02   fev    182. Fazenda… Pasto     371           0.490</span></span>
+<span><span class="co">#&gt; 3 leite_2023.csv  2023 FZ02   mar    202  Fazenda… Pasto     371           0.544</span></span>
+<span><span class="co">#&gt; # ℹ 357 more rows</span></span></code></pre></div>
+<p>O <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> é a conferência por ano, com os números do <code>LEIA-ME.txt</code>, e os resumos partem da mesma tabela:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">leite_fazendas</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 5</span></span>
+<span><span class="co">#&gt;     ano unidades linhas meses_sem_registro   soma</span></span>
+<span><span class="co">#&gt;   &lt;int&gt;    &lt;int&gt;  &lt;int&gt;              &lt;int&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  2023       10    120                  2 18870.</span></span>
+<span><span class="co">#&gt; 2  2024       10    120                  5 19673.</span></span>
+<span><span class="co">#&gt; 3  2025       10    120                  2 21661</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/resumir_categoria.html">resumir_categoria</a></span><span class="op">(</span><span class="va">leite_fazendas</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span><span class="co">#&gt;   sistema       unidades  total media_relativa</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;            &lt;int&gt;  &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Confinado            4 26281.          0.831</span></span>
+<span><span class="co">#&gt; 2 Semiconfinado        3 20442.          0.682</span></span>
+<span><span class="co">#&gt; 3 Pasto                3 13482.          0.558</span></span></code></pre></div>
+<p>A mesma tabela sai dos arquivos brutos com as funções de leitura e de arrumação, e o <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> desenha a sazonalidade:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dados</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/arrumar_dados.html">arrumar_dados</a></span><span class="op">(</span><span class="fu"><a href="reference/ler_anuais.html">ler_anuais</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="reference/ler_cadastro.html">ler_cadastro</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dados</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="verificação">Verificação<a class="anchor" aria-label="anchor" href="#verifica%C3%A7%C3%A3o"></a>
+</h2>
+<p>O <code>devtools::check()</code> da versão 0.1.0 termina sem erros, sem avisos e sem NOTEs:</p>
+<pre><code>0 errors ✔ | 0 warnings ✔ | 0 notes ✔</code></pre>
+<p>Em algumas execuções locais apareceu a NOTE</p>
+<pre><code>checking for future file timestamps ... NOTE
+  unable to verify current time</code></pre>
+<p>Ela não diz respeito ao pacote: para conferir se algum arquivo tem data no futuro, o <code>R CMD check</code> consulta a hora certa em um serviço na internet, e a NOTE aparece quando esse serviço não responde. Repetida a verificação com o serviço disponível, ela não aparece.</p>
+<p>No GitHub Actions, o <code>R CMD check</code> roda em cinco configurações (macOS e Windows com o R atual, e Ubuntu com o R em desenvolvimento, atual e anterior), e o selo <code>R-CMD-check</code> acima mostra o resultado do último envio.</p>
+<p>Os testes (<code>devtools::test()</code>) passam sem falhas: são 195 verificações, que cobrem todas as funções exportadas e os métodos da classe, cada erro de classe própria, a saída do <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> em <em>snapshot</em> e os números do <code>LEIA-ME.txt</code> (unidades, meses sem registro e somas por ano), lidos do próprio arquivo e conferidos contra a leitura e a arrumação. A cobertura dos testes, medida com <code>covr::package_coverage()</code>, é de <strong>100%</strong>.</p>
+</div>
+<div class="section level2">
+<h2 id="declaração-de-uso-de-llms">Declaração de uso de LLMs<a class="anchor" aria-label="anchor" href="#declara%C3%A7%C3%A3o-de-uso-de-llms"></a>
+</h2>
+<ul>
+<li>
+<strong>Ferramenta:</strong> Claude (Anthropic), modelo Claude Opus 5.5, pela interface de chat do Claude.</li>
+<li>
+<strong>Em que partes:</strong> A partir das funções e do relatório do meu trabalho intermediário, o Claude me ajudou a escrever o código das funções em <code>R/</code>, com a documentação do <code>roxygen2</code> e a validação com erros de classe própria, a classe <code>leitecoop</code> e os métodos, os testes, a vinheta (adaptada do relatório), o <code>_pkgdown.yml</code>, as alterações dos <em>workflows</em> (<code>local::.</code> e <code>LANG</code>), o <code>NEWS.md</code> e o rascunho deste README. Também me orientou, etapa por etapa, nos comandos do <code>usethis</code>, do <code>devtools</code> e do Git, que eu executei na minha máquina.</li>
+<li>
+<strong>Como o resultado foi conferido:</strong> rodei cada etapa e conferi o <code>devtools::check()</code> sem erros e sem avisos; o <code>devtools::test()</code> sem falhas e a cobertura de 100% no <code>covr</code>; os números da tabela arrumada, do <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> e dos resumos, comparados com o <code>LEIA-ME.txt</code> e com o relatório do trabalho intermediário; o <code>inst/extdata/</code> comparado, pela soma MD5, com o zip publicado para o meu login; o <code><a href="https://pkgdown.r-lib.org/reference/check_pkgdown.html" class="external-link">pkgdown::check_pkgdown()</a></code> e o site publicado; as duas verificações aprovadas no GitHub Actions; e a leitura do código, da documentação e da vinheta.</li>
+</ul>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -78,7 +195,13 @@ Lê, arruma e resume dados simulados do leite entregue a cada mês, de 2023 a 20
 </ul>
 </div>
 
-
+<div class="status-de-desenvolvimento">
+<h2 data-toc-skip>Status de desenvolvimento</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/l4ur419/tdr-projeto/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/l4ur419/tdr-projeto/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/l4ur419/tdr-projeto/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/l4ur419/tdr-projeto/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
