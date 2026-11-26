@@ -7,7 +7,7 @@
 ## Citação
 
 Fonte:
-[`DESCRIPTION`](https://github.com/l4ur419/tdr-projeto/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/l4ur419/tdr-projeto/blob/v0.1.0/DESCRIPTION)
 
 Nicoletti L (2026). *leitecoop: Leite Entregue pelas Fazendas de uma
 Cooperativa (Dados Simulados)*. R package version 0.1.0,
